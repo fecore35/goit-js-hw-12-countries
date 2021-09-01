@@ -2,7 +2,7 @@ const BASE_URL = 'https://restcountries.eu';
 
 const aFetchCountries = async function (searchQuery = 'Afghanistan') {
   const response = await fetch(`${BASE_URL}/rest/v2/name/${searchQuery}`);
-  const countries = response.json();
+  const countries = await response.json();
   return countries;
 };
 
