@@ -1,5 +1,6 @@
 import getRefs from './js/refs';
-import API from './js/fetchCountries';
+// import API from './js/fetchCountries';
+import AsyncAPI from './js/async-fetchCountries';
 import tplCountries from './templates/list-country.hbs';
 import tplCountry from './templates/card-country.hbs';
 import debounce from 'lodash.debounce';
@@ -8,7 +9,7 @@ import './sass/main.scss';
 
 const refs = getRefs();
 
-const formSearch = event => {
+const onSearch = async event => {
   const inputValue = event.target.value;
 
   if (!inputValue) {
@@ -17,9 +18,12 @@ const formSearch = event => {
     return;
   }
 
-  API.fetchCountries(inputValue)
-    .then(checkCountries)
-    .catch(error => console.log(error));
+  try {
+    const countries = await AsyncAPI.aFetchCountries(inputValue);
+    checkCountries(countries);
+  } catch (error) {
+    console.log(error);
+  }
 };
 
 function checkCountries(data) {
@@ -53,4 +57,4 @@ function renderResults(result) {
 }
 
 refs.form.addEventListener('submit', e => e.preventDefault());
-refs.form.addEventListener('input', debounce(formSearch, 500));
+refs.form.addEventListener('input', debounce(onSearch, 500));
